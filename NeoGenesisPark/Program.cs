@@ -1,4 +1,4 @@
-﻿partial class Program
+partial class Program
 {
     static bool _exit = false;
     static string _userName;
@@ -8,7 +8,6 @@
         GetUserName();
         do
         {
-            
             ClearConsole();
             Console.WriteLine("««Register System Of Dinosaurs»»");
             Console.Write(@$"Welcome {_userName?.ToUpper()}!
