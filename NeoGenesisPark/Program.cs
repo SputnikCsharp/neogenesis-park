@@ -13,7 +13,7 @@ partial class Program
             MainMenuShow();
             if (int.TryParse(Console.ReadLine(), out int option))
             {
-                _ = option switch
+                _ = option switch // switch expression lambda
                 {
                     1 => (int)RegisterDinosaur(), //(int) si el metodo retorna un int se vera asi, si no, dara error el cast.
                     2 => (int)UpdateDinosaur(),
