@@ -1,4 +1,6 @@
-﻿using NeoGenesisPark.Data;
+﻿
+using Microsoft.Extensions.Configuration;
+using NeoGenesisPark.Data;
 
 namespace NeoGenesisPark.Models;
 
@@ -13,7 +15,16 @@ public class MenuLinq
 
     public static MenuLinq CrearPorDefecto()
     {
-        var dinosaurios = DinosaurioData.ObtenerDinosaurios();
+        var config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false)
+            .AddJsonFile("appsettings.Development.json", optional: true)
+            .Build();
+
+        var connectionString = config.GetConnectionString("DefaultConnection")!;
+        var context = new AppDbContext(connectionString);
+
+        var dinosaurios = context.Dinosaurios.ToList();
         var consultas = new ConsultasLinq(dinosaurios);
         return new MenuLinq(consultas);
     }
@@ -24,27 +35,7 @@ public class MenuLinq
 
         while (corriendo)
         {
-            LimpiarConsola();
-            Console.WriteLine("Seleccione una consulta:");
-            Console.WriteLine("1.  Listar todos");
-            Console.WriteLine("2.  Filtrar por zona");
-            Console.WriteLine("3.  Filtrar por sector");
-            Console.WriteLine("4.  Filtrar por edad");
-            Console.WriteLine("5.  Filtrar por tipo");
-            Console.WriteLine("6.  Proyeccion nombre + codigo");
-            Console.WriteLine("7.  Proyeccion multiple");
-            Console.WriteLine("8.  Contar por zona");
-            Console.WriteLine("9.  Contar por sector");
-            Console.WriteLine("10. Sin rastreador");
-            Console.WriteLine("11. Sin ubicacion");
-            Console.WriteLine("12. Sin rastreador ni ubicacion");
-            Console.WriteLine("13. Ordenar por fecha");
-            Console.WriteLine("14. Orden alfabetico");
-            Console.WriteLine("15. Consulta combinada");
-            Console.WriteLine("16. Salir");
-
             var opcion = Console.ReadLine();
-            LimpiarConsola();
 
             switch (opcion)
             {
@@ -134,13 +125,11 @@ public class MenuLinq
                     break;
                 case "16":
                     corriendo = false;
-                    continue;
+                    break;
                 default:
                     Console.WriteLine("Opcion invalida.");
                     break;
             }
-
-            PresioneParaContinuar();
         }
     }
 
@@ -153,31 +142,7 @@ public class MenuLinq
     {
         foreach (var d in dinosaurios)
         {
-            Console.WriteLine($"[{d.Codigo}] {d.Nombre} - {d.Especie} | Zona: {d.Zona} | Sector: {d.Sector}");
+            Console.WriteLine($"[{d.Email}] {d.FirstName} - {d.LastName} | Zona: {d.City} | Sector: {d.Country}");
         }
-    }
-
-    private static void PresioneParaContinuar()
-    {
-        Console.WriteLine();
-        Console.WriteLine("Presione una tecla para continuar...");
-        if (Console.IsInputRedirected)
-        {
-            Console.ReadLine();
-            return;
-        }
-
-        Console.ReadKey();
-    }
-
-    private static void LimpiarConsola()
-    {
-        if (Console.IsOutputRedirected)
-        {
-            Console.WriteLine();
-            return;
-        }
-
-        Console.Clear();
     }
 }
