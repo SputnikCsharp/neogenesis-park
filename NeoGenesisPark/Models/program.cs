@@ -1,241 +1,183 @@
-﻿using NeoGenesisPark.Models;
-using // aqui la db
-using NeoGenesisPark.Models;
+﻿using NeoGenesisPark.Data;
 
-//   TALLER DE LINQ — SISTEMA DE DINOSAURIOS
-//   20 dinosaurios | 15 consultas funcionales
+namespace NeoGenesisPark.Models;
 
-
-List<Dinosaurio> dinosaurios = DinosaurioData.ObtenerDinosaurios();
-
-// Helper para imprimir encabezados
-void Titulo(string texto)
+public class MenuLinq
 {
-    Console.WriteLine();
-    Console.WriteLine($"=== {texto} ===");
-    Console.ResetColor();
-}
+    private readonly ConsultasLinq _consultas;
 
-void Separador() => Console.WriteLine(new string('─', 60));
+    public MenuLinq(ConsultasLinq consultas)
+    {
+        _consultas = consultas;
+    }
 
-static void PressEnterToContinue()
-{
-    Console.WriteLine("Press any key to continue...");
-    Console.ReadKey();
-    Console.Clear();
-}
-///  Menu para selecionde consultas
+    public static MenuLinq CrearPorDefecto()
+    {
+        var dinosaurios = DinosaurioData.ObtenerDinosaurios();
+        var consultas = new ConsultasLinq(dinosaurios);
+        return new MenuLinq(consultas);
+    }
 
+    public void Ejecutar()
+    {
+        var corriendo = true;
 
-        bool corriendo = true;
         while (corriendo)
         {
-            Console.WriteLine("select one level");
-            Console.WriteLine("1.  CONSULTA 1 — Listar todos");
-            Console.WriteLine("2.  CONSULTA 2 — Filtrar por zona");
-            Console.WriteLine("3.  CONSULTA 3 — Filtrar por sector");
-            Console.WriteLine("4.  CONSULTA 4 — Filtrar por edad");
-            Console.WriteLine("5.  CONSULTA 5 — Filtrar por tipo");
-            Console.WriteLine("6.  CONSULTA 6 — Proyección nombre completo + código");
-            Console.WriteLine("7.  CONSULTA 7 — Proyección múltiple");
-            Console.WriteLine("8.  CONSULTA 8 — Contar por zona");
-            Console.WriteLine("9.  CONSULTA 9 — Contar por sector");
-            Console.WriteLine("10. CONSULTA 10 — Sin rastreador");
-            Console.WriteLine("11. CONSULTA 11 — Sin ubicación");
-            Console.WriteLine("12. CONSULTA 12 — Sin rastreador NI ubicación");
-            Console.WriteLine("13. CONSULTA 13 — Ordenar por fecha");
-            Console.WriteLine("14. CONSULTA 14 — Orden alfabético");
-            Console.WriteLine("15. CONSULTA 15 — Combinada: Zona Norte + Carnívoro + con rastreador");
-            Console.WriteLine("16. EXIT");
+            LimpiarConsola();
+            Console.WriteLine("Seleccione una consulta:");
+            Console.WriteLine("1.  Listar todos");
+            Console.WriteLine("2.  Filtrar por zona");
+            Console.WriteLine("3.  Filtrar por sector");
+            Console.WriteLine("4.  Filtrar por edad");
+            Console.WriteLine("5.  Filtrar por tipo");
+            Console.WriteLine("6.  Proyeccion nombre + codigo");
+            Console.WriteLine("7.  Proyeccion multiple");
+            Console.WriteLine("8.  Contar por zona");
+            Console.WriteLine("9.  Contar por sector");
+            Console.WriteLine("10. Sin rastreador");
+            Console.WriteLine("11. Sin ubicacion");
+            Console.WriteLine("12. Sin rastreador ni ubicacion");
+            Console.WriteLine("13. Ordenar por fecha");
+            Console.WriteLine("14. Orden alfabetico");
+            Console.WriteLine("15. Consulta combinada");
+            Console.WriteLine("16. Salir");
 
-            string option =  Console.ReadLine();
-            switch (option)
+            var opcion = Console.ReadLine();
+            LimpiarConsola();
+
+            switch (opcion)
             {
+                case "0":
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine("           __\n          / _)\n   .-^^^-/ /\n__/       /\n<__.|_|-|_|\n\n  ");
+                    Console.WriteLine("Rawwwwww ");
+                    Console.WriteLine("esto fue echo por AMON");
+                    break;
+                
                 case "1":
-                    Console.Clear();
-                    
-                    Titulo("CONSULTA 1 — Todos los dinosaurios");
-                    var todos = ConsultasLINQ.ConsultaUno_ListarTodos(dinosaurios);
-                    Console.WriteLine($"Total: {todos.Count} dinosaurios registrados");
-                    foreach (var d in todos) 
-                        Console.WriteLine($"  [{d.Codigo}] {d.Nombre} - {d.Especie} | Zona: {d.Zona} | Tipo: {d.Tipo}");
-                    
-                    PressEnterToContinue();
+                    Titulo("Todos los dinosaurios");
+                    var todos = _consultas.ListarTodos();
+                    Console.WriteLine($"Total: {todos.Count}");
+                    ImprimirLista(todos);
                     break;
-
                 case "2":
-                    Console.Clear();
-                    
-                    Titulo("CONSULTA 2 — Filtrar por Zona: Norte");
-                    var porZona = ConsultasLINQ.ConsultaDos_FiltrarPorZona(dinosaurios, "Norte");
-                    Console.WriteLine($"Dinosaurios en zona Norte: {porZona.Count}");
-                    foreach (var d in porZona)
-                        Console.WriteLine($"  [{d.Codigo}] {d.Nombre} ({d.Especie})");
-                    
-                    PressEnterToContinue();
+                    Titulo("Filtrar por zona");
+                    ImprimirLista(_consultas.FiltrarPorZona("Norte"));
                     break;
-                
                 case "3":
-                    Console.Clear();
-                    
-                    Titulo("CONSULTA 3 — Filtrar por Sector: Selva");
-                    var porSector = ConsultasLINQ.ConsultaTres_FiltrarPorSector(dinosaurios, "Selva");
-                    Console.WriteLine($"Dinosaurios en sector Selva: {porSector.Count}");
-                    foreach (var d in porSector)
-                        Console.WriteLine($"  [{d.Codigo}] {d.Nombre} | Zona: {d.Zona}");
-                    
-                    PressEnterToContinue();
+                    Titulo("Filtrar por sector");
+                    ImprimirLista(_consultas.FiltrarPorSector("Selva"));
                     break;
-                
                 case "4":
-                    Console.Clear();
-                    
-                    Titulo("CONSULTA 4 — Dinosaurios con Edad >= 150 millones de años");
-                    var porEdad = ConsultasLINQ.ConsultaCuatro_FiltrarPorEdad(dinosaurios, 150);
-                    Console.WriteLine($"Dinosaurios con 150+ Ma: {porEdad.Count}");
-                    foreach (var d in porEdad)
-                        Console.WriteLine($"  [{d.Codigo}] {d.Nombre} — {d.Edad} Ma");
-                   
-                    PressEnterToContinue();
+                    Titulo("Filtrar por edad");
+                    ImprimirLista(_consultas.FiltrarPorEdad(150));
                     break;
-                
                 case "5":
-                    Console.Clear();
-                    
-                    Titulo("CONSULTA 5 — Filtrar por Tipo: Carnívoro");
-                    var porTipo = ConsultasLINQ.ConsultaCinco_FiltrarPorTipo(dinosaurios, "Carnívoro");
-                    Console.WriteLine($"Carnívoros registrados: {porTipo.Count}");
-                    foreach (var d in porTipo)
-                        Console.WriteLine($"  [{d.Codigo}] {d.Nombre} ({d.Especie}) — {d.PesoToneladas} t");
-                    
-                    PressEnterToContinue();
+                    Titulo("Filtrar por tipo");
+                    ImprimirLista(_consultas.FiltrarPorTipo("Carnívoro"));
                     break;
-
                 case "6":
-                    Console.Clear();
-                    
-                    Titulo("CONSULTA 6 — Proyección: Nombre completo + Código");
-                    var proyeccion = ConsultasLINQ.ConsultaSeis_ProyeccionNombreCodigo(dinosaurios);
-                    foreach (var item in proyeccion)
-                        Console.WriteLine($"  {item.Codigo}  →  {item.NombreCompleto}"); 
-                    
-                    PressEnterToContinue();
+                    Titulo("Proyeccion nombre + codigo");
+                    foreach (var item in _consultas.ProyeccionNombreCodigo())
+                    {
+                        Console.WriteLine($"{item.Codigo} -> {item.NombreCompleto}");
+                    }
                     break;
-                
-                 case "7":
-                    Console.Clear();
-                    
-                    Titulo("CONSULTA 7 — Proyección múltiple: Nombre + Código + Zona + Sector");
-                    var proyeccionMulti = ConsultasLINQ.ConsultaSiete_ProyeccionMultiple(dinosaurios);
-                    foreach (var item in proyeccionMulti)
-                        Console.WriteLine($"  {item.Codigo} | {item.NombreCompleto,-35} | Zona: {item.Zona,-6} | Sector: {item.Sector}"); 
-                    
-                    PressEnterToContinue();
+                case "7":
+                    Titulo("Proyeccion multiple");
+                    foreach (var item in _consultas.ProyeccionMultiple())
+                    {
+                        Console.WriteLine($"{item.Codigo} | {item.NombreCompleto} | Zona: {item.Zona} | Sector: {item.Sector}");
+                    }
                     break;
-                
-                 case "8":
-                     Console.Clear();
-                     
-                     Titulo("CONSULTA 8 — Agrupación: Conteo por Zona");
-                     var conteoZona = ConsultasLINQ.ConsultaOcho_ContarPorZona(dinosaurios);
-                     foreach (var item in conteoZona)
-                         Console.WriteLine($"  Zona {item.Zona,-10}: {item.Total} dinosaurio(s)");
-                     
-                    PressEnterToContinue();
+                case "8":
+                    Titulo("Conteo por zona");
+                    foreach (var item in _consultas.ContarPorZona())
+                    {
+                        Console.WriteLine($"Zona {item.Zona}: {item.Total}");
+                    }
                     break;
-                
-                 case  "9":
-                     Console.Clear();
-                     
-                     Titulo("CONSULTA 9 — Agrupación: Conteo por Sector");
-                     var conteoSector = ConsultasLINQ.ConsultaNueve_ContarPorSector(dinosaurios);
-                     foreach (var item in conteoSector)
-                         Console.WriteLine($"  Sector {item.Sector,-12}: {item.Total} dinosaurio(s)"); 
-                     
-                    PressEnterToContinue();
+                case "9":
+                    Titulo("Conteo por sector");
+                    foreach (var item in _consultas.ContarPorSector())
+                    {
+                        Console.WriteLine($"Sector {item.Sector}: {item.Total}");
+                    }
                     break;
                 case "10":
-                    Console.Clear();
-                    
-                    Titulo("CONSULTA 10 — Filtro avanzado: Sin rastreador");
-                    var sinRastreador = ConsultasLINQ.ConsultaDiez_SinRastreador(dinosaurios);
-                    Console.WriteLine($"Dinosaurios SIN rastreador: {sinRastreador.Count}");
-                    foreach (var d in sinRastreador)
-                        Console.WriteLine($"  [{d.Codigo}] {d.Nombre} | Zona: {d.Zona} | Sector: {d.Sector}"); 
-                    
-                    PressEnterToContinue();
+                    Titulo("Sin rastreador");
+                    ImprimirLista(_consultas.SinRastreador());
                     break;
-
                 case "11":
-                    Console.Clear();
-                    
-                    Titulo("CONSULTA 11 — Filtro avanzado: Sin ubicación");
-                    var sinUbicacion = ConsultasLINQ.ConsultaOnce_SinUbicacion(dinosaurios);
-                    Console.WriteLine($"Dinosaurios SIN ubicación: {sinUbicacion.Count}");
-                    foreach (var d in sinUbicacion)
-                        Console.WriteLine($"  [{d.Codigo}] {d.Nombre} | Zona: {d.Zona} | Tipo: {d.Tipo}"); 
-                    
-                    PressEnterToContinue();
+                    Titulo("Sin ubicacion");
+                    ImprimirLista(_consultas.SinUbicacion());
                     break;
-                
                 case "12":
-                    Console.Clear();
-                    
-                    Titulo("CONSULTA 12 — Sin rastreador Y sin ubicación (peligro máximo)");
-                    var sinAmbos = ConsultasLINQ.ConsultaDoce_SinRastreadorNiUbicacion(dinosaurios);
-                    Console.WriteLine($"Dinosaurios completamente desaparecidos del radar: {sinAmbos.Count}");
-                    foreach (var d in sinAmbos)
-                        Console.WriteLine($"  [{d.Codigo}] {d.Nombre} ({d.Especie}) — ¡ALERTA!");
-                    
-                    PressEnterToContinue();
+                    Titulo("Sin rastreador ni ubicacion");
+                    ImprimirLista(_consultas.SinRastreadorNiUbicacion());
                     break;
-                
                 case "13":
-                    Console.Clear();
-                    
-                    Titulo("CONSULTA 13 — Orden por Fecha de Registro (más reciente primero)");
-                    var porFecha = ConsultasLINQ.ConsultaTrece_OrdenarPorFecha(dinosaurios);
-                    foreach (var d in porFecha)
-                        Console.WriteLine($"  {d.FechaRegistro:yyyy-MM-dd}  [{d.Codigo}]  {d.Nombre}");
-                    
-                    PressEnterToContinue();
+                    Titulo("Orden por fecha");
+                    ImprimirLista(_consultas.OrdenarPorFecha());
                     break;
-                
                 case "14":
-                    Console.Clear();
-                    
-                    Titulo("CONSULTA 14 — Orden alfabético por Especie, luego Nombre");
-                    var alfabetico = ConsultasLINQ.ConsultaCatorce_OrdenAlfabetico(dinosaurios);
-                    foreach (var d in alfabetico)
-                        Console.WriteLine($"  {d.Especie,-35} → {d.Nombre}"); 
-                    
-                    PressEnterToContinue();
+                    Titulo("Orden alfabetico");
+                    ImprimirLista(_consultas.OrdenAlfabetico());
                     break;
-
                 case "15":
-                    Console.Clear();
-                    
-                    Titulo("CONSULTA 15 — Combinada: Carnívoros en Zona Norte con rastreador");
-                    var combinada = ConsultasLINQ.ConsultaQuince_Combinada(dinosaurios, "Norte", "Carnívoro");
-                    if (combinada.Count == 0)
+                    Titulo("Consulta combinada");
+                    foreach (var item in _consultas.Combinada("Norte", "Carnívoro"))
                     {
-                        Console.WriteLine("  No se encontraron resultados para esa combinación.");
-                        Console.WriteLine("  (Probando con Zona Norte + Herbívoro...)");
-                        combinada = ConsultasLINQ.ConsultaQuince_Combinada(dinosaurios, "Norte", "Herbívoro");
+                        Console.WriteLine($"{item.Codigo} | {item.NombreCompleto} | Sector: {item.Sector}");
                     }
-                    Console.WriteLine($"  Resultados: {combinada.Count}");
-                    foreach (var item in combinada)
-                        Console.WriteLine($"  {item.Codigo}  |  {item.NombreCompleto,-35}  |  Sector: {item.Sector}"); 
-                    
-                    PressEnterToContinue();
                     break;
-                
                 case "16":
-                    Console.Clear();
                     corriendo = false;
-                    PressEnterToContinue();
+                    continue;
+                default:
+                    Console.WriteLine("Opcion invalida.");
                     break;
             }
-           
+
+            PresioneParaContinuar();
         }
-        
+    }
+
+    private static void Titulo(string texto)
+    {
+        Console.WriteLine($"=== {texto} ===");
+    }
+
+    private static void ImprimirLista(IEnumerable<Dinosaurio> dinosaurios)
+    {
+        foreach (var d in dinosaurios)
+        {
+            Console.WriteLine($"[{d.Codigo}] {d.Nombre} - {d.Especie} | Zona: {d.Zona} | Sector: {d.Sector}");
+        }
+    }
+
+    private static void PresioneParaContinuar()
+    {
+        Console.WriteLine();
+        Console.WriteLine("Presione una tecla para continuar...");
+        if (Console.IsInputRedirected)
+        {
+            Console.ReadLine();
+            return;
+        }
+
+        Console.ReadKey();
+    }
+
+    private static void LimpiarConsola()
+    {
+        if (Console.IsOutputRedirected)
+        {
+            Console.WriteLine();
+            return;
+        }
+
+        Console.Clear();
+    }
+}
