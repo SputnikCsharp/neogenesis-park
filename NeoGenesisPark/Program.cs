@@ -14,6 +14,4 @@ partial class Program
             MainMenuShow();
         } while (!_exit);
     }
-
-   
 }
