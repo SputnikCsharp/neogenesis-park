@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using NeoGenesisPark.Data;
 
 namespace NeoGenesisPark.Models;
@@ -35,6 +34,7 @@ public class MenuLinq
 
         while (corriendo)
         {
+            Console.WriteLine("Ingrese una opcion: ");
             var opcion = Console.ReadLine();
 
             switch (opcion)
@@ -54,19 +54,68 @@ public class MenuLinq
                     break;
                 case "2":
                     Titulo("Filtrar por zona");
-                    ImprimirLista(_consultas.FiltrarPorZona("Norte"));
+                    while (true)
+                    {
+                        Console.WriteLine("\nPor favor escriba la zona que desea buscar: Norte, Oeste, Sur, Este");
+                        string inputZona = Console.ReadLine();
+                        
+                        if (!string.IsNullOrWhiteSpace(inputZona) && !inputZona.Any(char.IsDigit))
+                        {
+                            ImprimirLista(_consultas.FiltrarPorZona(inputZona));
+                            break; 
+                        }
+    
+                        Console.WriteLine("Entrada no válida. Por favor, no use números ni deje el espacio vacío.");
+                    }
                     break;
                 case "3":
                     Titulo("Filtrar por sector");
-                    ImprimirLista(_consultas.FiltrarPorSector("Selva"));
+                    while (true)
+                    {
+                        Console.WriteLine("\nPor favor escriba el sector que desea buscar: Selva, Pradera, Montaña, Costa");
+                        string inputSector = Console.ReadLine();
+                        
+                        if (!string.IsNullOrWhiteSpace(inputSector) && !inputSector.Any(char.IsDigit))
+                        {
+                            ImprimirLista(_consultas.FiltrarPorSector(inputSector));
+                            break;
+                        }
+    
+                        Console.WriteLine("Entrada no válida. Por favor, no use números ni deje el espacio vacío.");
+                    }
                     break;
                 case "4":
                     Titulo("Filtrar por edad");
-                    ImprimirLista(_consultas.FiltrarPorEdad(150));
+                    while (true)
+                    {
+                        Console.WriteLine("Dependiendo de la edad que ingrese se le mostrara resultados de esa edad o mayores.");
+                        string inputEdad = Console.ReadLine();
+                        int edad;
+                        
+                        if (!int.TryParse(inputEdad, out edad) || edad <= 0)
+                        {
+                            Console.WriteLine("Entrada no valida. Por favor, no ingrese numeros negativos o 0");
+                            break;
+                        }
+                        ImprimirLista(_consultas.FiltrarPorEdad(edad));
+                        break;
+                    }
                     break;
                 case "5":
                     Titulo("Filtrar por tipo");
-                    ImprimirLista(_consultas.FiltrarPorTipo("Carnívoro"));
+                    while (true)
+                    {
+                        Console.WriteLine("\nPor favor escriba el tipo de dinosaurio que desea buscar: Carnívoro, Herbívoro");
+                        string inputTipo = Console.ReadLine();
+                        
+                        if (!string.IsNullOrWhiteSpace(inputTipo) && !inputTipo.Any(char.IsDigit))
+                        {
+                            ImprimirLista(_consultas.FiltrarPorTipo(inputTipo));
+                            break;
+                        }
+    
+                        Console.WriteLine("Entrada no válida. Por favor, no use números ni deje el espacio vacío.");
+                    }
                     break;
                 case "6":
                     Titulo("Proyeccion nombre + codigo");
