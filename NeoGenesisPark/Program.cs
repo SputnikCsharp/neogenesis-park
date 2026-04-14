@@ -3,7 +3,6 @@ partial class Program
 {
     static bool _exit = false;
     static string? _userName;
-    
     static void Main(string[] args)
     {
         ClearConsole();
@@ -16,7 +15,7 @@ partial class Program
                 _ = option switch // switch expression lambda
                 {
                     1 => (int)RegisterDinosaur(), //(int) si el metodo retorna un int se vera asi, si no, dara error el cast.
-                    2 => (int)UpdateDinosaur(),
+                    2 => UpdateDinosaur(),
                     3 => DeleteDinosaur(),
                     4 => SearchDinosaur(),
                     5 => LinqMenuShow(),
