@@ -1,39 +1,42 @@
-partial class Program
-    {
-        static void PressEnterToContinue()
-        {
-            Console.WriteLine("\nPress Enter to continue");
-            Console.ReadKey();
-            Console.Clear();
-        }
+using Microsoft.Extensions.Configuration;
+using Spectre.Console;
+using NeoGenesisPark.Models;
 
-        static void ClearConsole()
-        {
-            Console.Clear();
-        }
-    
-        static string? GetUserName()
-        {
-            Console.Write("Insert your name» ");
-            _userName = Console.ReadLine() ?? "Guest";
-            return _userName;
-        }
-        static string? FirstNameDino()
-        {
-            Console.Write("Assigned Dino Name» ");
-            string? name = Console.ReadLine();
-            return name;
-        }
-        static string? LastNameDino()
-        {
-            Console.Write("Assigned Specie Name» ");
-            string? lastName = Console.ReadLine();
-            return lastName;
-        }
-        static string? UserNameDino()
-        {
-            Console.Write("Assigned Username» ");
-            string? lastName = Console.ReadLine();
-            return lastName;
-        }
+using NeoGenesisPark.Data;
+//utils
+partial class Program{
+    static void PressEnterToContinue()
+    {
+        AnsiConsole.MarkupLine("\n[grey]Press Enter to continue...[/]");
+        Console.ReadKey(true); // 'true' oculta la tecla presionada
+        ClearConsole();
     }
+
+    static void ClearConsole()
+    {
+        AnsiConsole.Clear();
+    }
+
+    static string? GetUserName()
+    {
+        _userName = AnsiConsole.Ask<string>("Insert your name» ");
+        return _userName;
+    }
+        
+    // Generamos las consultas frescas cada vez que entramos al menú LINQ
+    // para asegurar que los datos estén actualizados si agregaste/borraste dinos.
+    static ConsultasLinq GetUpdateConsults()
+    {
+        var config = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false)
+            .AddJsonFile("appsettings.Development.json", optional: true)
+            .Build();
+
+        var connectionString = config.GetConnectionString("DefaultConnection")!;
+        var context = new AppDbContext(connectionString);
+
+        var dinosaurios = context.Dinosaurios.ToList();
+        return new ConsultasLinq(dinosaurios);
+    }
+}

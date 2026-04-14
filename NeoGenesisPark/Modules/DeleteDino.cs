@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Configuration;
 using NeoGenesisPark.Data;
-using NeoGenesisPark.Models;
 
 namespace NeoGenesisPark.Modules;
 
@@ -28,8 +27,8 @@ public class DeleteDino
 
     public void Ejecutar()
     {
-        Console.WriteLine("=== Delete Dinosaur ===");
-        Console.WriteLine();
+        Program.TitlesText("Delete a Dinosaur", $"Fill the fields to continue");
+        
 
         Console.Write("Enter Username or Email to find the dinosaur» ");
         var busqueda = Console.ReadLine()?.Trim();
@@ -46,12 +45,12 @@ public class DeleteDino
         Console.WriteLine();
         Console.WriteLine($"Found: [{dino.Email}] {dino.FirstName} {dino.LastName} | Zone: {dino.City} | Type: {dino.Type}");
         Console.WriteLine();
-        Console.Write("Are you sure you want to delete this record? (yes/no)» ");
+        Program.ShowWarning("You are sure to delete this (yes/no)» ");
         var confirmacion = Console.ReadLine()?.Trim().ToLower();
 
         if (confirmacion != "yes")
         {
-            Console.WriteLine("Operation cancelled.");
+            Program.ShowSuccess("Operation cancelled");
             return;
         }
 
@@ -59,6 +58,6 @@ public class DeleteDino
         _context.SaveChanges();
 
         Console.WriteLine();
-        Console.WriteLine($"Dinosaur '{dino.FirstName} {dino.LastName}' deleted successfully.");
+        Program.ShowSuccess($"Dinosaur '{dino.FirstName} {dino.LastName}' deleted successfully.");
     }
 }

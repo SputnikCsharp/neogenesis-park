@@ -1,47 +1,46 @@
-
+using Spectre.Console;
 using NeoGenesisPark.Modules;
 partial class Program
 {
     // options main menu
-    static int RegisterDinosaur()
+    static void RegisterDinosaur()
     {
         ClearConsole();
         RegisterDino.CrearPorDefecto().Ejecutar();
         PressEnterToContinue();
-        return 0;
     }
-    static int UpdateDinosaur()
+
+    static void UpdateDinosaur()
     {
         ClearConsole();
         UpdateDino.CrearPorDefecto().Ejecutar();
         PressEnterToContinue();
-        return 0;
     }
-    static int DeleteDinosaur()
+
+    static void DeleteDinosaur()
     {
+        ClearConsole();
         DeleteDino.CrearPorDefecto().Ejecutar();
         PressEnterToContinue();
-        return 0;
     }
-    static int SearchDinosaur()
+
+    static void SearchDinosaur()
     {  
         ClearConsole();
         SearchDino.CrearPorDefecto().Ejecutar();
         PressEnterToContinue();
-        return 0;
     }
-    static int Exit()
+
+    static void Exit()
     {
-        _exit = true;
-        Console.WriteLine("Closing App...");
+        AnsiConsole.MarkupLine("[red]Closing App...[/]");
+        _exit = true; 
         PressEnterToContinue();
-        return 0;
     }
     
-    static int InvalidOption()
+    static void InvalidOption()
     {
-        Console.WriteLine("Invalid option.");
+        AnsiConsole.MarkupLine("[red]Invalid option.[/]");
         PressEnterToContinue();
-        return 0;
     }
 }

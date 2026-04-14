@@ -127,8 +127,8 @@ public class MenuLinq
                     corriendo = false;
                     break;
                 default:
-                    Console.WriteLine("Opcion invalida.");
-                    break;
+                    Program.ShowError("Invalid option");
+                    continue;
             }
         }
     }

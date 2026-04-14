@@ -28,7 +28,7 @@ public class SearchDino
 
     public void Ejecutar()
     {
-        Console.WriteLine("=== Search Dinosaur ===");
+        Program.TitlesText("Search Dinosaur |", "Search a Dino by username or Email for more information");
         Console.WriteLine();
 
         Console.Write("Enter Username or Email» ");
@@ -39,7 +39,7 @@ public class SearchDino
 
         if (dino == null)
         {
-            Console.WriteLine($"No dinosaur found with '{busqueda}'.");
+            Program.ShowError($"No dinosaur found with '{busqueda}'.");
             return;
         }
 
