@@ -28,7 +28,7 @@ public class UpdateDino
 
     public void Ejecutar()
     {
-        Console.WriteLine("=== Update Dinosaur ===");
+        Program.TitlesText("Update Dino", "Here you can update the information of any Dino");
         Console.WriteLine();
 
         Console.Write("Enter Username or Email to find the dinosaur» ");
@@ -39,12 +39,12 @@ public class UpdateDino
 
         if (dino == null)
         {
-            Console.WriteLine($"Error: No dinosaur found with '{busqueda}'.");
+            Program.ShowError($"Error: No dinosaur found with '{busqueda}'.");
             return;
         }
 
         Console.WriteLine();
-        Console.WriteLine($"Found: [{dino.Email}] {dino.FirstName} {dino.LastName}");
+        Program.ShowSuccess($"Found: [{dino.Email}] {dino.FirstName} {dino.LastName}");
         Console.WriteLine("Leave blank to keep current value.");
         Console.WriteLine();
 
@@ -85,6 +85,6 @@ public class UpdateDino
         _context.SaveChanges();
 
         Console.WriteLine();
-        Console.WriteLine($"Dinosaur '{dino.FirstName} {dino.LastName}' updated successfully.");
+        Program.ShowSuccess($"Dinosaur '{dino.FirstName} {dino.LastName}' updated successfully.");
     }
 }

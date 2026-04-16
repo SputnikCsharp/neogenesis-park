@@ -28,8 +28,7 @@ public class RegisterDino
 
     public void Ejecutar()
     {
-        Console.WriteLine("=== Register Dinosaur ===");
-        Console.WriteLine("(required fields marked with *)");
+        Program.TitlesText("Dinosaur Register |", "Require fill marked with *»");
         Console.WriteLine();
 
         Console.Write("First Name *» ");
@@ -74,7 +73,7 @@ public class RegisterDino
             string.IsNullOrWhiteSpace(email))
         {
             Console.WriteLine();
-            Console.WriteLine("Error: First Name, Last Name, Username and Email are required.");
+            Program.ShowError("Error: First Name, Last Name, Username and Email are required.");
             return;
         }
 
@@ -84,12 +83,12 @@ public class RegisterDino
 
         if (usernameExiste)
         {
-            Console.WriteLine($"Error: Username '{username}' is already registered.");
+            Program.ShowError($"Error: Username '{username}' is already registered.");
             return;
         }
         if (emailExiste)
         {
-            Console.WriteLine($"Error: Email '{email}' is already registered.");
+            Program.ShowError($"Error: Email '{email}' is already registered.");
             return;
         }
 
@@ -113,6 +112,6 @@ public class RegisterDino
         _context.SaveChanges();
 
         Console.WriteLine();
-        Console.WriteLine($"Dinosaur '{firstName} {lastName}' registered successfully with ID {nuevoDino.Id}.");
+        Program.ShowSuccess($"Dinosaur '{firstName} {lastName}' registered successfully with ID {nuevoDino.Id}.");
     }
 }
